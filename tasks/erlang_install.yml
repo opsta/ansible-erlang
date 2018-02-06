@@ -1,0 +1,6 @@
+---
+- name: Install Erlang
+  apt:
+    name: "{{ erlang_apt_package }}"
+    state: present
+    update_cache: yes

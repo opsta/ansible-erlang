@@ -1,0 +1,4 @@
+---
+- name: Install Erlang DEB repository
+  apt:
+    deb: "{{ erlang_deb_url }}"
