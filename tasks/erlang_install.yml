@@ -1,6 +1,15 @@
 ---
-- name: Install Erlang
-  apt:
-    name: "{{ erlang_apt_package }}"
-    state: present
-    update_cache: yes
+- block: # Debian
+  - name: Install Erlang
+    apt:
+      name: "{{ erlang_apt_package }}"
+      state: present
+      update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- block: # RedHat
+  - name: Install Erlang
+    yum:
+      name: "{{ erlang_yum_package }}"
+      state: present
+  when: ansible_os_family == "RedHat"

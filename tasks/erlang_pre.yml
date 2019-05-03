@@ -1,4 +1,30 @@
 ---
-- name: Install Erlang DEB repository
-  apt:
-    deb: "{{ erlang_deb_url }}"
+- block: # Debian
+  - name: Install Erlang DEB repository
+    apt:
+      deb: "{{ erlang_deb_url }}"
+  when: ansible_os_family == "Debian"
+
+- block: # RedHat
+  - rpm_key:
+     state: present
+     key: https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+
+  - name: Add repository erlang into the same file (1/2)
+    yum_repository:
+      name: rabbitmq_erlang
+      description: rabbitmq_erlang
+      file: rabbitmq_erlang
+      baseurl: https://packagecloud.io/rabbitmq/erlang/el/7/$basearch
+      gpgkey: https://packagecloud.io/rabbitmq/erlang/gpgkey
+      state: present
+
+  - name: Add repository erlang into the same file (2/2)
+    yum_repository:
+      name: rabbitmq_erlang-source
+      description: rabbitmq_erlang-source
+      file: rabbitmq_erlang
+      baseurl: https://packagecloud.io/rabbitmq/erlang/el/7/SRPMS
+      gpgkey: https://packagecloud.io/rabbitmq/erlang/gpgkey
+      state: present
+  when: ansible_os_family == "RedHat"
